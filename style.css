@@ -1,0 +1,7 @@
+div {
+	border: 2px solid green;
+	background-color: yellow;
+	padding: 70px;
+	width: 350px;
+	box-sizing: border-box;
+}

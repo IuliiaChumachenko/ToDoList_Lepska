@@ -1,3 +1,3 @@
-document.getElementById('hello').innerHTML = 'Hello, World!';
+document.getElementById('hello').innerHTML = 'Here will be Yulia\'s ToDo list';
 
 
