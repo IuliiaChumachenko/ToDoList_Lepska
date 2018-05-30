@@ -1,0 +1,39 @@
+{
+  "name": "ToDoList_Lepska",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "start": "webpack-dev-server --mode development --open",
+    "clear": "del-cli dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IuliiaChumachenko/ToDoList_Lepska.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IuliiaChumachenko/ToDoList_Lepska/issues"
+  },
+  "homepage": "https://github.com/IuliiaChumachenko/ToDoList_Lepska#readme",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "bootstrap": "^4.1.1",
+    "jquery": "^3.3.1",
+    "underscore": "^1.9.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "del-cli": "^1.1.0",
+    "webpack": "^4.10.2",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "description": ""
+}
