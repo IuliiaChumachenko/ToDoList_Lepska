@@ -4,27 +4,22 @@
 	<title>29.05.18 - Creation of Git repository</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" media="screen">
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="src/css/style.css">
 
 </head>
 <body>
-	<div id='hello'></div>
-	<img src='todo-list.png'>
+	<h1>ToDo List</h1>
+	<div id="form">
+		<form name="main">
+			<textarea name="newItem" id="newItem"></textarea>
 
-	<div id='hello'></div>
-
-	<div class="container">
-		<div class="page-header">
-			<h1 id="timeline"></h1>
-		</div>
-		<ul class="timeline">
-		</ul>
-
+			<input type="button" value="Add new" id="addBtn">
+		</form>
 	</div>
 
+	<div id="list"></div>
 
 	<script src="dist/bundle.js" charset="utf-8"></script>
-	<!--<script type="text/javascript" src="js/script.js"></script>-->
 
 </body>
 </html>

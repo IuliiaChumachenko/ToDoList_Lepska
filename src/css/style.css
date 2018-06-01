@@ -1,0 +1,9 @@
+.list-note {
+	border: 1px solid black;
+	margin-bottom: 20px;
+}
+
+.deleteBtn {
+	color: red;
+	margin-left: 20px;
+}
