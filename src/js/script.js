@@ -67,7 +67,7 @@ function addItemToList() {
 function showList() {
     let str = '';
     todos.forEach(function(item, index){
-        str += `<div class='list-note' data-index='${index}'>${item.showText()}<span class="deleteBtn">Delete</span></div>`;
+        str += `<div class='list-note' data-index='${index}'><div class="itemText">${item.showText()}</div><div class="deleteBtn">Delete</div></div>`;
     });
 
     document.getElementById('list').innerHTML = str;
