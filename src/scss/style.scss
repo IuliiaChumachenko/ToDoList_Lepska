@@ -1,4 +1,4 @@
-$backghround-color: aquamarine;
+$backghround-color: LightGray;
 
 @mixin hover-color($color) {
   &:hover{
@@ -18,7 +18,6 @@ body {
   form {
     width: 420px;
     margin: 0 auto;
-    //margin-left: 40;
 
     #newItem {
       background-color: linen;
@@ -34,7 +33,9 @@ body {
       height: 50px;
       display: block;
       margin: 0 auto 10px auto;
-      background-color: gold;
+      background-color: DimGrey;
+      color: white;
+      font-weight: bold;
     }
   }
 
@@ -45,18 +46,23 @@ body {
     background-color: linen;
     margin: 0 auto 20px auto;
     display: flex;
+    justify-content: space-around;
 
     div {
-      justify-content: space-around;
+
       //align-items: center;
     }
 
     .deleteBtn {
       width: 50px;
       height: 30px;
-      background-color: lightpink;
-      color: red;
+      background-color: red;
+      color: white;
+      font-weight: bold;
       align-self: center;
+      text-align: center;
+      line-height: 30px;
+      vertical-align: middle;
       &:hover{
         cursor: pointer;
       }

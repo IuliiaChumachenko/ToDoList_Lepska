@@ -7,7 +7,8 @@ module.exports = {
         './src/scss/style.scss'
     ],
     output: {
-        filename: './bundle.js'
+        filename: './bundle.js',
+        path: path.resolve(__dirname, './docs')
     },
     devtool: "source-map",
     module: {
