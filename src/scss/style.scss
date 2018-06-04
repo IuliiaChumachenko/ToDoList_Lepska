@@ -45,18 +45,22 @@ body {
   }
 
     #sortMenu {
-    width: 250px;
+    width: 350px;
     display: flex;
     justify-content: space-between;
     margin: 10px auto;
     //display: none;
   }
 
-  #sort-form {
-    width: 200px;
+  #searchForm {
+    width: 300px;
     display: flex;
     justify-content: space-between;
     margin: 10px auto;
+
+    input {
+      width: 250px;
+    }
   }
 
   .list-note {

@@ -4,6 +4,8 @@ let todos = [];
 
 let form = document.forms.main;
 
+let searchForm = document.forms.searchForm;
+
 function TodoItem (text){
     this._text = text;
     this.date = '';
@@ -40,10 +42,17 @@ document.getElementById('addBtn').onclick = addItemToList;
 
 document.getElementById('saveBtn').onclick = saveItem;
 
+
 // навесили события на кнопки сортировки.
 document.getElementById('sortTaskBtn').onclick = sortByTask;
 
 document.getElementById('sortDateBtn').onclick = sortByDate;
+
+document.getElementById('showAllBtn').onclick = showList;
+//навесили событие на кнопку поиска
+
+document.getElementById('searchForm').onclick = searchInList;
+
 
 // функция добавления нового элемента
 function addItemToList() {
@@ -63,11 +72,6 @@ function addItemToList() {
 
     addBtnEvents();
 
-    // дата создан
-    // todos.forEach(function(item, index){
-    //     console.log(item.date);
-    // });
-
 }
 
 // document.querySelectorAll("body").addEventListener("click", function(event) {
@@ -86,6 +90,8 @@ function showList() {
     });
 
     document.getElementById('list').innerHTML = str;
+
+    addBtnEvents();
 }
 
 // функция получения данных из локал сторидж
@@ -201,4 +207,26 @@ function sortByDate() {
 
     addBtnEvents();
 
+}
+
+//Функция поиска
+function searchInList() {
+    let searchingItem = document.getElementById('searchLine').value;
+    let lastElem = searchingItem.length;
+    let str = '';
+
+    todos.forEach(function(item, index){
+        if(item.showText().slice(0, lastElem) ===  searchingItem) {
+            str += `<div class='list-note' data-index='${index}'><div class="itemText">${item.showText()}</div><div class="itemDate">${item.date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+        }
+    });
+
+    if (!str) {
+        document.getElementById('searchLine').value = 'No matches';
+        return;
+    }
+
+    document.getElementById('list').innerHTML = str;
+
+    addBtnEvents();
 }
