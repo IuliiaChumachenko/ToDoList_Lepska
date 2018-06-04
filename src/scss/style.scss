@@ -15,28 +15,48 @@ body {
     @include hover-color(red);
   }
 
-  form {
+  #form {
     width: 420px;
     margin: 0 auto;
 
     #newItem {
       background-color: linen;
       width: 400px;
-      height: 150px;
+      height: 100px;
       border: 1px solid black;
       display: block;
       margin-bottom: 10px;
     }
 
-    #addBtn {
-      width: 100px;
+    .btn {
+      width: 120px;
       height: 50px;
       display: block;
+      text-align: center;
       margin: 0 auto 10px auto;
       background-color: DimGrey;
       color: white;
       font-weight: bold;
     }
+
+    #saveBtn {
+      display: none;
+    }
+  }
+
+    #sortMenu {
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px auto;
+    //display: none;
+  }
+
+  #sort-form {
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px auto;
   }
 
   .list-note {
@@ -46,31 +66,49 @@ body {
     background-color: linen;
     margin: 0 auto 20px auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 
     div {
 
       //align-items: center;
     }
 
-    .deleteBtn {
+    .btn-container {
+      display: flex;
+      width: 115px;
+      justify-content: space-between;
+    }
+
+    .button{
       width: 50px;
       height: 30px;
-      background-color: red;
       color: white;
       font-weight: bold;
       align-self: center;
       text-align: center;
       line-height: 30px;
       vertical-align: middle;
+      background-color: green;
       &:hover{
         cursor: pointer;
       }
+
     }
 
-    .itemText {
-      width: 500px;
+    .deleteBtn {
+      background-color: red;
+    }
+
+    .editBtn {
+      background-color: green;
+    }
+
+    .itemText, .itemDate {
       align-self: center;
+    }
+
+    .itemDate {
+      width: 120px;
     }
   }
 

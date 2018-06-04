@@ -13,9 +13,21 @@
 		<form name="main">
 			<textarea name="newItem" id="newItem"></textarea>
 
-			<input type="button" value="Add new task" id="addBtn">
+			<input type="hidden" name="index">
+			<input type="button" value="Add new task" id="addBtn" class="btn">
+			<input type="button" value="Save changes" id="saveBtn" class="btn">
 		</form>
 	</div>
+
+    <div id="sortMenu">
+        <input type="button" value="Sort by tasks" id="sortTaskBtn" class="btn">
+        <input type="button" value="Sort by date" id="sortDateBtn" class="btn">
+    </div>
+
+	<form name="sort-form" id="sort-form">
+		<input type="text" id="searchLine">
+		<input type="button" value="Search" id="searchBtn" class="btn">
+	</form>
 
 	<div id="list"></div>
 
