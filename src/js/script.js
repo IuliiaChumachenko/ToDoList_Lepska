@@ -4,6 +4,8 @@ let todos = [];
 
 let form = document.forms.main;
 
+const maxItemsInList = 5;
+
 let searchForm = document.forms.searchForm;
 
 function TodoItem (text){
@@ -29,11 +31,12 @@ if(fromLocalStorage() !== null){
         todos.push(item);
     });
 
-    showList();
+    showAllList();
 
     addBtnEvents();
 
-
+    addNavButtons();
+    addNuvBtnEvents();
 }
 
 // навесили события на кнопки создания и сохранения изменений
@@ -48,10 +51,10 @@ document.getElementById('sortTaskBtn').onclick = sortByTask;
 
 document.getElementById('sortDateBtn').onclick = sortByDate;
 
-document.getElementById('showAllBtn').onclick = showList;
+document.getElementById('showAllBtn').onclick = showAllList;
 //навесили событие на кнопку поиска
 
-document.getElementById('searchForm').onclick = searchInList;
+document.getElementById('searchBtn').onclick = searchInList;
 
 
 // функция добавления нового элемента
@@ -68,10 +71,12 @@ function addItemToList() {
     toLocalStorage();
 
     // перерисовали весь список
-    showList();
+    showAllList();
 
     addBtnEvents();
 
+    addNavButtons();
+    addNuvBtnEvents();
 }
 
 // document.querySelectorAll("body").addEventListener("click", function(event) {
@@ -81,13 +86,46 @@ function addItemToList() {
 // });
 
 
-// функция отрисовки списка на экране
+// функция отрисовки списка на экране - отрисовывает последние maxItemsInList элементов
 
-function showList() {
+function showAllList() {
     let str = '';
-    todos.forEach(function(item, index){
-        str += `<div class='list-note' data-index='${index}'><div class="itemText">${item.showText()}</div><div class="itemDate">${item.date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
-    });
+    // todos.forEach(function(item, index){
+    //     newItem = `<div class='list-note' data-index='${index}'><div class="itemText">${item.showText()}</div><div class="itemDate">${item.date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+    //     str = newItem + str;
+    // });
+    if(todos.length > maxItemsInList) {
+        for(let index = todos.length - 1; index > todos.length - maxItemsInList - 1; index--) {
+            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+
+        }
+    } else {
+        for(let index = todos.length - 1; index >= 0; index--) {
+            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+
+        }
+    }
+
+    document.getElementById('list').innerHTML = str;
+    addBtnEvents();
+}
+
+function showList(navigatorList) {
+    let str = '';
+
+    if(navigatorList !== Math.ceil(todos.length/maxItemsInList)) {
+
+        for(let index = (navigatorList - 1) * maxItemsInList + maxItemsInList - 1; index >= (navigatorList - 1) * maxItemsInList; index--) {
+            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+
+        }
+    } else {
+
+        for(let index = todos.length - 1; index >= (navigatorList - 1) * maxItemsInList; index--) {
+            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+        }
+    }
+
 
     document.getElementById('list').innerHTML = str;
 
@@ -115,9 +153,12 @@ function deleteItem(event) {
 
     toLocalStorage();
 
-    showList();
+    showAllList();
 
     addBtnEvents();
+
+    addNavButtons();
+    addNuvBtnEvents();
 }
 
 // EditHandler - функция, которая срабатывает на кнопе Edit
@@ -145,10 +186,12 @@ function saveItem() {
     todos[index].date = countDate();
 
     toLocalStorage();
-    showList();
+    showAllList();
 
     addBtnEvents();
 
+    addNavButtons();
+    addNuvBtnEvents();
 }
 
 // навешиваем события на динамически созданные кнопки - Edit и Delete
@@ -175,19 +218,22 @@ function sortByTask() {
 
     todos = todos.sort(function (a, b) {
         if (a._text > b._text) {
-            return 1;
+            return -1;
         }
         if (a._text < b._text) {
-            return -1;
+            return 1;
         }
         // a должно быть равным b
         return 0;
     });
 
     toLocalStorage();
-    showList();
+    showAllList();
 
     addBtnEvents();
+
+    addNavButtons();
+    addNuvBtnEvents();
 }
 
 function sortByDate() {
@@ -203,17 +249,27 @@ function sortByDate() {
     });
 
     toLocalStorage();
-    showList();
+    showAllList();
 
     addBtnEvents();
 
+    addNavButtons();
+    addNuvBtnEvents();
 }
 
 //Функция поиска
 function searchInList() {
+
     let searchingItem = document.getElementById('searchLine').value;
+
+    if (!document.getElementById('searchLine').value) {
+        return;
+    }
+    
     let lastElem = searchingItem.length;
     let str = '';
+
+    // console.log(searchingItem);
 
     todos.forEach(function(item, index){
         if(item.showText().slice(0, lastElem) ===  searchingItem) {
@@ -226,7 +282,38 @@ function searchInList() {
         return;
     }
 
+
+
     document.getElementById('list').innerHTML = str;
 
     addBtnEvents();
 }
+
+
+// добавили внизу навигатор по блокам в maxItemsInList элементов списка
+
+function addNavButtons() {
+    let navigator = document.getElementById('navigator');
+    navigator.innerHTML = '';
+    let butCount = Math.ceil(todos.length/maxItemsInList);
+
+    for (let i = 1; i <= butCount; i++) {
+        let butElem = document.createElement('div');
+        butElem.classList.add('navButton');
+        butElem.setAttribute('data-index', i);
+        butElem.innerHTML = i;
+        navigator.appendChild(butElem);
+    }
+}
+
+// навешиваем события на динамически созданные кнопки перехода между блоками задач
+
+function addNuvBtnEvents() {
+    let navBtns = document.getElementsByClassName('navButton');
+    for (let i = 0; i < navBtns.length; i++) {
+        navBtns[i].onclick = function(event){
+            showList(parseInt(event.target.getAttribute('data-index')));
+        };
+    }
+}
+
