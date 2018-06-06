@@ -1,21 +1,37 @@
 'use strict';
 
+
 let todos = [];
 
 let form = document.forms.main;
 
-const maxItemsInList = 5;
+const maxItemsInList = 3;
 
 let searchForm = document.forms.searchForm;
 
-function TodoItem (text){
-    this._text = text;
-    this.date = '';
-    // this.deleted = false;
-    this.showText = function(){
+
+
+// function TodoItem (text){
+//     this._text = text;
+//     this.date = '';
+//     // this.deleted = false;
+//     this.showText = function(){
+//         return this._text;
+//     }
+// }
+
+
+class TodoItem {
+    constructor (text) {
+        this._text = text;
+        this.date = '';
+    }
+
+    showText (){
         return this._text;
     }
 }
+
 
 // проверка локал сторидж при загрузке страницы
 
@@ -32,29 +48,29 @@ if(fromLocalStorage() !== null){
     });
 
     showAllList();
+    addNavButtons();
 
     addBtnEvents();
-
-    addNavButtons();
-    addNuvBtnEvents();
+    addNavBtnEvents();
 }
 
 // навесили события на кнопки создания и сохранения изменений
 
-document.getElementById('addBtn').onclick = addItemToList;
+document.getElementById('addBtn').addEventListener('click', addItemToList);
 
-document.getElementById('saveBtn').onclick = saveItem;
+document.getElementById('saveBtn').addEventListener('click', saveItem);
 
 
 // навесили события на кнопки сортировки.
-document.getElementById('sortTaskBtn').onclick = sortByTask;
+document.getElementById('sortTaskBtn').addEventListener('click', sortByTask);
 
-document.getElementById('sortDateBtn').onclick = sortByDate;
+document.getElementById('sortDateBtn').addEventListener('click', sortByDate);
 
-document.getElementById('showAllBtn').onclick = showAllList;
+document.getElementById('showAllBtn').addEventListener('click', showAllList);
+
 //навесили событие на кнопку поиска
 
-document.getElementById('searchBtn').onclick = searchInList;
+document.getElementById('searchBtn').addEventListener('click', searchInList);
 
 
 // функция добавления нового элемента
@@ -66,17 +82,15 @@ function addItemToList() {
     item.date = countDate();
     todos.push(item);
     form.elements.newItem.value = '';
-//    console.log(todos);
 
     toLocalStorage();
 
     // перерисовали весь список
     showAllList();
+    addNavButtons();
 
     addBtnEvents();
-
-    addNavButtons();
-    addNuvBtnEvents();
+    addNavBtnEvents();
 }
 
 // document.querySelectorAll("body").addEventListener("click", function(event) {
@@ -96,18 +110,32 @@ function showAllList() {
     // });
     if(todos.length > maxItemsInList) {
         for(let index = todos.length - 1; index > todos.length - maxItemsInList - 1; index--) {
-            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+            str += `<div class='list-note' data-index='${index}'>
+                        <div class="itemText">${todos[index].showText()}</div>
+                        <div class="itemDate">${todos[index].date}</div>
+                        <div class="btn-container">
+                            <div class="button editBtn">Edit</div>
+                            <div class="button deleteBtn">Delete</div>
+                        </div>
+                    </div>`;
 
         }
     } else {
         for(let index = todos.length - 1; index >= 0; index--) {
-            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+            str += `<div class='list-note' data-index='${index}'>
+                        <div class="itemText">${todos[index].showText()}</div>
+                        <div class="itemDate">${todos[index].date}</div>
+                        <div class="btn-container">
+                            <div class="button editBtn">Edit</div>
+                            <div class="button deleteBtn">Delete</div>
+                        </div>
+                    </div>`;
 
         }
     }
 
     document.getElementById('list').innerHTML = str;
-    addBtnEvents();
+    // addBtnEvents();
 }
 
 function showList(navigatorList) {
@@ -116,29 +144,41 @@ function showList(navigatorList) {
     if(navigatorList !== Math.ceil(todos.length/maxItemsInList)) {
 
         for(let index = (navigatorList - 1) * maxItemsInList + maxItemsInList - 1; index >= (navigatorList - 1) * maxItemsInList; index--) {
-            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
-
+            str += `<div class='list-note' data-index='${index}'>
+                        <div class="itemText">${todos[index].showText()}</div>
+                        <div class="itemDate">${todos[index].date}</div>
+                        <div class="btn-container">
+                            <div class="button editBtn">Edit</div>
+                            <div class="button deleteBtn">Delete</div>
+                        </div>
+                    </div>`;
         }
     } else {
 
         for(let index = todos.length - 1; index >= (navigatorList - 1) * maxItemsInList; index--) {
-            str += `<div class='list-note' data-index='${index}'><div class="itemText">${todos[index].showText()}</div><div class="itemDate">${todos[index].date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+            str += `<div class='list-note' data-index='${index}'>
+                        <div class="itemText">${todos[index].showText()}</div>
+                        <div class="itemDate">${todos[index].date}</div>
+                        <div class="btn-container">
+                            <div class="button editBtn">Edit</div>
+                            <div class="button deleteBtn">Delete</div>
+                        </div>
+                    </div>`;
         }
     }
 
-
     document.getElementById('list').innerHTML = str;
 
-    addBtnEvents();
+    // addBtnEvents();
 }
 
-// функция получения данных из локал сторидж
+// функция отправки данных в локал сторидж
 function toLocalStorage() {
     let todosINJSONFormat = JSON.stringify(todos);
     localStorage.setItem('todoarr', todosINJSONFormat);
 }
 
-// функция отправки данных в локал сторидж
+// функция получения данных из локал сторидж
 function fromLocalStorage() {
     return JSON.parse(localStorage.getItem('todoarr'));
 }
@@ -146,22 +186,19 @@ function fromLocalStorage() {
 
 // фукнция удаления элемента
 function deleteItem(event) {
-    // console.log(event);
     let index = event.target.parentNode.parentNode.getAttribute('data-index');
-    // console.log(index);
     todos.splice(index, 1);
 
     toLocalStorage();
 
     showAllList();
-
     addBtnEvents();
 
     addNavButtons();
-    addNuvBtnEvents();
+    addNavBtnEvents();
 }
 
-// EditHandler - функция, которая срабатывает на кнопе Edit
+// функция, которая срабатывает на кнопе Edit
 function editItem(event) {
     document.getElementById('addBtn').style.display ='none';
     document.getElementById('saveBtn').style.display ='block';
@@ -172,7 +209,7 @@ function editItem(event) {
     form.elements.index.value = index;
 }
 
-// Save handler - фунция сохранения изменений
+// фунция сохранения изменений
 
 function saveItem() {
     document.getElementById('addBtn').style.display ='block';
@@ -191,19 +228,19 @@ function saveItem() {
     addBtnEvents();
 
     addNavButtons();
-    addNuvBtnEvents();
+    addNavBtnEvents();
 }
 
 // навешиваем события на динамически созданные кнопки - Edit и Delete
 function addBtnEvents() {
     let delBut = document.querySelectorAll('.deleteBtn');
     for(let i  = 0; i < delBut.length; i++){
-        delBut[i].onclick = deleteItem;
+        delBut[i].addEventListener('click', deleteItem);
     }
 
     let edBut = document.querySelectorAll('.editBtn');
     for(let i  = 0; i < edBut.length; i++){
-        edBut[i].onclick = editItem;
+        edBut[i].addEventListener('click', editItem);
     }
 }
 
@@ -233,7 +270,7 @@ function sortByTask() {
     addBtnEvents();
 
     addNavButtons();
-    addNuvBtnEvents();
+    addNavBtnEvents();
 }
 
 function sortByDate() {
@@ -244,7 +281,7 @@ function sortByDate() {
         if (a.date < b.date) {
             return -1;
         }
-        // a должно быть равным b
+
         return 0;
     });
 
@@ -254,7 +291,7 @@ function sortByDate() {
     addBtnEvents();
 
     addNavButtons();
-    addNuvBtnEvents();
+    addNavBtnEvents();
 }
 
 //Функция поиска
@@ -265,15 +302,20 @@ function searchInList() {
     if (!document.getElementById('searchLine').value) {
         return;
     }
-    
+
     let lastElem = searchingItem.length;
     let str = '';
 
-    // console.log(searchingItem);
-
-    todos.forEach(function(item, index){
+    todos.forEach((item, index) => {
         if(item.showText().slice(0, lastElem) ===  searchingItem) {
-            str += `<div class='list-note' data-index='${index}'><div class="itemText">${item.showText()}</div><div class="itemDate">${item.date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
+            str += `<div class='list-note' data-index='${index}'>
+                        <div class="itemText">${item.showText()}</div>
+                        <div class="itemDate">${item.date}</div>
+                        <div class="btn-container">
+                            <div class="button editBtn">Edit</div>
+                            <div class="button deleteBtn">Delete</div>
+                        </div>
+                    </div>`;
         }
     });
 
@@ -282,11 +324,9 @@ function searchInList() {
         return;
     }
 
-
-
     document.getElementById('list').innerHTML = str;
 
-    addBtnEvents();
+    // addBtnEvents();
 }
 
 
@@ -308,12 +348,12 @@ function addNavButtons() {
 
 // навешиваем события на динамически созданные кнопки перехода между блоками задач
 
-function addNuvBtnEvents() {
+function addNavBtnEvents() {
     let navBtns = document.getElementsByClassName('navButton');
     for (let i = 0; i < navBtns.length; i++) {
-        navBtns[i].onclick = function(event){
+        navBtns[i].addEventListener('click', (event) => {
             showList(parseInt(event.target.getAttribute('data-index')));
-        };
+        });
     }
 }
 
