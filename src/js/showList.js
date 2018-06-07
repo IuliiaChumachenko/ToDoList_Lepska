@@ -8,13 +8,9 @@ const maxItemsInList = 3;
 
 // функция отрисовки списка на экране - отрисовывает последние maxItemsInList элементов
 
+
 function showAllList() {
     let str = '';
-
-    // todos.forEach(function(item, index){
-    //     newItem = `<div class='list-note' data-index='${index}'><div class="itemText">${item.showText()}</div><div class="itemDate">${item.date}</div><div class="btn-container"><div class="button editBtn">Edit</div><div class="button deleteBtn">Delete</div></div></div>`;
-    //     str = newItem + str;
-    // });
 
     if(todos.length > maxItemsInList) {
         for(let index = todos.length - 1; index > todos.length - maxItemsInList - 1; index--) {
@@ -45,16 +41,24 @@ function showAllList() {
     document.getElementById('list').innerHTML = str;
 
     addBtnEvents();
-
     addNavButtons();
+
+    let navBtns = document.getElementsByClassName('navButton');
+    for (let i = 0; i < navBtns.length; i++) {
+        navBtns[i].classList.remove('navSelectedButton');
+    }
+    navBtns[0].classList.add('navSelectedButton');
 }
 
 function showList(navigatorList) {
     let str = '';
+    // console.log(navigatorList);
+    let navBtns = document.getElementsByClassName('navButton');
+    let navigatorListReverse = navBtns.length - parseInt(event.target.getAttribute('data-index'))+ 1;
 
-    if(navigatorList !== Math.ceil(todos.length/maxItemsInList)) {
 
-        for(let index = (navigatorList - 1) * maxItemsInList + maxItemsInList - 1; index >= (navigatorList - 1) * maxItemsInList; index--) {
+    if(todos.length % maxItemsInList && navigatorList === 1) {
+        for(let index = todos.length - 1 - maxItemsInList*(navBtns.length - 1); index >= 0; index--) {
             str += `<div class='list-note' data-index='${index}'>
                         <div class="itemText">${todos[index].showText()}</div>
                         <div class="btn-container">
@@ -65,8 +69,7 @@ function showList(navigatorList) {
                     </div>`;
         }
     } else {
-
-        for(let index = todos.length - 1; index >= (navigatorList - 1) * maxItemsInList; index--) {
+        for(let index = todos.length - 1 - maxItemsInList*(navigatorListReverse-1); index >= todos.length - maxItemsInList*navigatorListReverse; index--) {
             str += `<div class='list-note' data-index='${index}'>
                         <div class="itemText">${todos[index].showText()}</div>
                         <div class="btn-container">
@@ -81,8 +84,6 @@ function showList(navigatorList) {
     document.getElementById('list').innerHTML = str;
 
     addBtnEvents();
-
-    // addNavButtons();
 }
 
 // навешиваем события на динамически созданные кнопки - Edit и Delete
@@ -105,11 +106,19 @@ function addNavButtons() {
     navigator.innerHTML = '';
     let butCount = Math.ceil(todos.length/maxItemsInList);
 
-    for (let i = 1; i <= butCount; i++) {
+    for (let i = butCount; i >= 1; i--) {
         let butElem = document.createElement('div');
         butElem.classList.add('navButton');
         butElem.setAttribute('data-index', i);
         butElem.innerHTML = i;
+        navigator.appendChild(butElem);
+    }
+
+    if (!butCount){
+        let butElem = document.createElement('div');
+        butElem.classList.add('navButton');
+        butElem.setAttribute('data-index', 1);
+        butElem.innerHTML = 1;
         navigator.appendChild(butElem);
     }
 
@@ -120,8 +129,18 @@ function addNavButtons() {
 
 function addNavBtnEvents() {
     let navBtns = document.getElementsByClassName('navButton');
+
     for (let i = 0; i < navBtns.length; i++) {
+        // console.log(navBtns[i]);
+
         navBtns[i].addEventListener('click', (event) => {
+            let navBtns = document.getElementsByClassName('navButton');
+            for (let i = 0; i < navBtns.length; i++) {
+                // console.log(navBtns[i]);
+                navBtns[i].classList.remove('navSelectedButton');
+            }
+            navBtns[i].classList.add('navSelectedButton');
+
             showList(parseInt(event.target.getAttribute('data-index')));
         });
     }

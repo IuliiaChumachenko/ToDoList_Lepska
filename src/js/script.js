@@ -1,7 +1,7 @@
 'use strict';
 
 import addItemToList from './TodoItemFunc';
-import {fromLocalStorage, toLocalStorage} from "./localStorage";
+import {fromLocalStorage} from "./localStorage";
 import { showAllList, saveItem } from "./showList";
 import {sortList} from "./sortList";
 import {searchInList} from "./searchInList";
@@ -43,7 +43,5 @@ document.getElementById('showAllBtn').addEventListener('click', showAllList);
 //навесили событие на кнопку поиска
 
 document.getElementById('searchBtn').addEventListener('click', searchInList);
-
-
 
 

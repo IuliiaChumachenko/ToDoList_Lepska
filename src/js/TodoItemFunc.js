@@ -21,6 +21,12 @@ class TodoItem {
 function addItemToList() {
 
     let text = form.elements.newItem.value;
+
+    if(!text) {
+        alert('Please enter your tsk');
+        return;
+    }
+
     let item = new TodoItem(text);
 
     item.date = countDate();
