@@ -10,8 +10,9 @@ let text = document.getElementsByClassName('itemText');
 let itemDate = document.getElementsByClassName('itemDate');
 let listNote = document.getElementsByClassName('list-note');
 
+let navBtns = document.getElementsByClassName('navButton');
 
-// функция отрисовки списка на экране - отрисовывает последние maxItemsInList элементов
+// функция отрисовки макета для элементов списка
 function makeTemplateForItems() {
     let str = '';
     for (let i = 0; i < maxItemsInList; i++) {
@@ -27,6 +28,7 @@ function makeTemplateForItems() {
     document.getElementById('list2').innerHTML = str;
 }
 
+// функция отрисовки списка на экране - отрисовывает последние maxItemsInList элементов
 function showAllList() {
     let pageOfList = [];
     let indexesOfItems = [];
@@ -58,7 +60,7 @@ function showAllList() {
     addBtnEvents();
     addNavButtons();
 
-    let navBtns = document.getElementsByClassName('navButton');
+
     for (let i = 0; i < navBtns.length; i++) {
         navBtns[i].removeAttribute('id');
     }
@@ -69,12 +71,7 @@ function showList(navigatorList) {
     let pageOfList = [];
     let indexesOfItems = [];
 
-    let navBtns = document.getElementsByClassName('navButton');
     let navigatorListReverse = navBtns.length - navigatorList + 1;
-
-    // console.log(navigatorList);
-    // console.log(parseInt(event.target.getAttribute('data-index')));
-    // console.log(navigatorListReverse);
 
     if(todos.length % maxItemsInList && navigatorList === 1) {
         for(let index = todos.length - 1 - maxItemsInList*(navBtns.length - 1); index >= 0; index--) {
@@ -103,40 +100,6 @@ function showList(navigatorList) {
     addBtnEvents();
 }
 
-//переключение страниц по стрелочкам
-
-function showPrevPageOfList(){
-    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
-    let navBtns = document.getElementsByClassName('navButton');
-
-    if(index === navBtns.length) {
-        return;
-    }
-
-    let indexInBtnArray = navBtns.length - index;
-
-    navBtns[indexInBtnArray].removeAttribute('id');
-    navBtns[indexInBtnArray - 1].setAttribute('id', 'navSelectedButton');
-
-    showList(index + 1);
-}
-
-function showNextPageOfList(){
-    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
-    let navBtns = document.getElementsByClassName('navButton');
-
-    if(index === 1) {
-        return;
-    }
-
-    let indexInBtnArray = navBtns.length - index;
-
-    navBtns[indexInBtnArray].removeAttribute('id');
-    navBtns[indexInBtnArray + 1].setAttribute('id', 'navSelectedButton');
-
-    showList(index - 1);
-}
-
 // навешиваем события на динамически созданные кнопки - Edit и Delete
 function addBtnEvents() {
     let delBut = document.querySelectorAll('.deleteBtn');
@@ -152,53 +115,6 @@ function addBtnEvents() {
     }
 }
 
-// добавили внизу навигатор по блокам в maxItemsInList элементов списка
-
-function addNavButtons() {
-    document.getElementById('navigatorContainer').style.display = 'flex';
-    let navigator = document.getElementById('btnNavigator');
-    navigator.innerHTML = '';
-    let butCount = Math.ceil(todos.length/maxItemsInList);
-
-    for (let i = butCount; i >= 1; i--) {
-        let butElem = document.createElement('div');
-        butElem.classList.add('navButton');
-        butElem.setAttribute('data-index', i);
-        butElem.innerHTML = i;
-        navigator.appendChild(butElem);
-    }
-
-    if (!butCount){
-        let butElem = document.createElement('div');
-        butElem.classList.add('navButton');
-        butElem.setAttribute('data-index', 1);
-        butElem.innerHTML = 1;
-        navigator.appendChild(butElem);
-    }
-
-    addNavBtnEvents();
-}
-
-// навешиваем события на динамически созданные кнопки перехода между блоками задач
-
-function addNavBtnEvents() {
-    let navBtns = document.getElementsByClassName('navButton');
-
-    for (let i = 0; i < navBtns.length; i++) {
-        // console.log(navBtns[i]);
-
-        navBtns[i].addEventListener('click', (event) => {
-            let navBtns = document.getElementsByClassName('navButton');
-            for (let i = 0; i < navBtns.length; i++) {
-                // console.log(navBtns[i]);
-                navBtns[i].removeAttribute('id');
-            }
-            navBtns[i].setAttribute('id', 'navSelectedButton');
-            // console.log(parseInt(event.target.getAttribute('data-index')));
-            showList(parseInt(event.target.getAttribute('data-index')));
-        });
-    }
-}
 
 // фукнция удаления элемента
 function deleteItem(event) {
@@ -240,15 +156,10 @@ function saveItem() {
     showAllList();
 }
 
+// функция поиска
 function searchInList() {
 
     let searchingItem = document.getElementById('searchLine').value;
-
-    const maxItemsInList = 3;
-
-    let text = document.getElementsByClassName('itemText');
-    let itemDate = document.getElementsByClassName('itemDate');
-    let listNote = document.getElementsByClassName('list-note');
 
     if (!document.getElementById('searchLine').value) {
         return;
@@ -285,8 +196,82 @@ function searchInList() {
         document.getElementById('searchLine').value = 'No matches';
         return;
     }
+}
 
+// пагинация
+// добавили внизу навигатор по блокам в maxItemsInList элементов списка
 
+function addNavButtons() {
+    document.getElementById('navigatorContainer').style.display = 'flex';
+    let navigator = document.getElementById('btnNavigator');
+    navigator.innerHTML = '';
+    let butCount = Math.ceil(todos.length/maxItemsInList);
+
+    for (let i = butCount; i >= 1; i--) {
+        let butElem = document.createElement('div');
+        butElem.classList.add('navButton');
+        butElem.setAttribute('data-index', i);
+        butElem.innerHTML = i;
+        navigator.appendChild(butElem);
+    }
+
+    if (!butCount){
+        let butElem = document.createElement('div');
+        butElem.classList.add('navButton');
+        butElem.setAttribute('data-index', 1);
+        butElem.innerHTML = 1;
+        navigator.appendChild(butElem);
+    }
+
+    addNavBtnEvents();
+}
+
+// навешиваем события на динамически созданные кнопки пагинации
+
+function addNavBtnEvents() {
+
+    for (let i = 0; i < navBtns.length; i++) {
+
+        navBtns[i].addEventListener('click', (event) => {
+            for (let i = 0; i < navBtns.length; i++) {
+                navBtns[i].removeAttribute('id');
+            }
+            navBtns[i].setAttribute('id', 'navSelectedButton');
+            showList(parseInt(event.target.getAttribute('data-index')));
+        });
+    }
+}
+
+//переключение страниц по стрелочкам
+
+function showPrevPageOfList(){
+    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
+
+    if(index === navBtns.length) {
+        return;
+    }
+
+    let indexInBtnArray = navBtns.length - index;
+
+    navBtns[indexInBtnArray].removeAttribute('id');
+    navBtns[indexInBtnArray - 1].setAttribute('id', 'navSelectedButton');
+
+    showList(index + 1);
+}
+
+function showNextPageOfList(){
+    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
+
+    if(index === 1) {
+        return;
+    }
+
+    let indexInBtnArray = navBtns.length - index;
+
+    navBtns[indexInBtnArray].removeAttribute('id');
+    navBtns[indexInBtnArray + 1].setAttribute('id', 'navSelectedButton');
+
+    showList(index - 1);
 }
 
 export { showAllList, saveItem, makeTemplateForItems, showPrevPageOfList, showNextPageOfList, addBtnEvents, searchInList};

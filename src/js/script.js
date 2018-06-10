@@ -8,8 +8,10 @@ import {sortList} from "./sortList";
 export let todos = [];
 export let form = document.forms.main;
 
-// проверка local storage при загрузке страницы
+//формируем макет для отображения todo list'a
 makeTemplateForItems();
+
+// проверка local storage при загрузке страницы
 
 if(fromLocalStorage() !== null){
 
@@ -28,24 +30,51 @@ if(fromLocalStorage() !== null){
 
 // навесили события на кнопки создания и сохранения изменений
 
-document.getElementById('addBtn').addEventListener('click', addItemToList);
+let addBtn = document.getElementById('addBtn'),
+    saveBtn = document.getElementById('saveBtn');
 
-document.getElementById('saveBtn').addEventListener('click', saveItem);
+if (addBtn) {
+    addBtn.addEventListener('click', addItemToList);
+}
+
+if (saveBtn) {
+    saveBtn.addEventListener('click', saveItem);
+}
 
 // навесили события на кнопки сортировки.
 
-document.getElementById('sortTaskBtn').addEventListener('click', () => {sortList('byTask')});
+let sortTaskBtn = document.getElementById('sortTaskBtn'),
+    sortDateBtn = document.getElementById('sortDateBtn'),
+    showAllBtn = document.getElementById('showAllBtn');
 
-document.getElementById('sortDateBtn').addEventListener('click', () => {sortList('byDate')});
+if (sortTaskBtn){
+    sortTaskBtn.addEventListener('click', () => {sortList('byTask')});
+}
 
-document.getElementById('showAllBtn').addEventListener('click', showAllList);
+if (sortDateBtn){
+    sortDateBtn.addEventListener('click', () => {sortList('byDate')});
+}
+
+if (showAllBtn){
+    showAllBtn.addEventListener('click', showAllList);
+}
 
 //навесили событие на кнопку поиска
+let searchBtn = document.getElementById('searchBtn');
 
-document.getElementById('searchBtn').addEventListener('click', searchInList);
+if (searchBtn){
+    searchBtn.addEventListener('click', searchInList);
+}
 
-//навесили событие на кнопку вперед
+//навесили событие на кнопки вперед/назад (пагинация)
+let navPrev = document.getElementById('navPrev'),
+    navNext = document.getElementById('navNext');
 
-document.getElementById('navPrev').addEventListener('click', showPrevPageOfList);
-document.getElementById('navNext').addEventListener('click', showNextPageOfList);
+if (navPrev){
+    navPrev.addEventListener('click', showPrevPageOfList);
+}
+
+if (navNext){
+    navNext.addEventListener('click', showNextPageOfList);
+}
 
