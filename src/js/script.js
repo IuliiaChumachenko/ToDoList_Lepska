@@ -2,14 +2,14 @@
 
 import addItemToList from './TodoItemFunc';
 import {fromLocalStorage} from "./localStorage";
-import { showAllList, saveItem } from "./showList";
+import {showAllList, saveItem, makeTemplateForItems, showPrevPageOfList, showNextPageOfList, searchInList} from "./showList";
 import {sortList} from "./sortList";
-import {searchInList} from "./searchInList";
 
 export let todos = [];
 export let form = document.forms.main;
 
 // проверка local storage при загрузке страницы
+makeTemplateForItems();
 
 if(fromLocalStorage() !== null){
 
@@ -44,4 +44,8 @@ document.getElementById('showAllBtn').addEventListener('click', showAllList);
 
 document.getElementById('searchBtn').addEventListener('click', searchInList);
 
+//навесили событие на кнопку вперед
+
+document.getElementById('navPrev').addEventListener('click', showPrevPageOfList);
+document.getElementById('navNext').addEventListener('click', showNextPageOfList);
 

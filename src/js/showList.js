@@ -6,95 +6,148 @@ import countDate from "./countDate";
 
 const maxItemsInList = 3;
 
-// функция отрисовки списка на экране - отрисовывает последние maxItemsInList элементов
+let text = document.getElementsByClassName('itemText');
+let itemDate = document.getElementsByClassName('itemDate');
+let listNote = document.getElementsByClassName('list-note');
 
+
+// функция отрисовки списка на экране - отрисовывает последние maxItemsInList элементов
+function makeTemplateForItems() {
+    let str = '';
+    for (let i = 0; i < maxItemsInList; i++) {
+        str += `<div class='list-note' style = 'display: none'> 
+                    <div class="itemText"></div>
+                    <div class="btn-container">
+                        <div class="itemDate"></div>
+                        <div class="button editBtn">Edit</div>
+                        <div class="button deleteBtn">Delete</div>
+                    </div>
+                </div>`;
+    }
+    document.getElementById('list2').innerHTML = str;
+}
 
 function showAllList() {
-    let str = '';
+    let pageOfList = [];
+    let indexesOfItems = [];
 
     if(todos.length > maxItemsInList) {
         for(let index = todos.length - 1; index > todos.length - maxItemsInList - 1; index--) {
-            str += `<div class='list-note' data-index='${index}'>
-                        <div class="itemText">${todos[index].showText()}</div>
-                        <div class="btn-container">
-                            <div class="itemDate">${todos[index].date}</div>
-                            <div class="button editBtn">Edit</div>
-                            <div class="button deleteBtn">Delete</div>
-                        </div>
-                    </div>`;
-
+            pageOfList.push(todos[index]);
+            indexesOfItems.push(index);
         }
     } else {
         for(let index = todos.length - 1; index >= 0; index--) {
-            str += `<div class='list-note' data-index='${index}'>
-                        <div class="itemText">${todos[index].showText()}</div>
-                        <div class="btn-container">
-                            <div class="itemDate">${todos[index].date}</div>
-                            <div class="button editBtn">Edit</div>
-                            <div class="button deleteBtn">Delete</div>
-                        </div>
-                    </div>`;
-
+            pageOfList.push(todos[index]);
+            indexesOfItems.push(index);
         }
     }
 
-    document.getElementById('list').innerHTML = str;
+    for( let i = 0; i < maxItemsInList; i++) {
+        if(pageOfList[i]) {
+            text[i].innerHTML = pageOfList[i].showText();
+            itemDate[i].innerHTML = pageOfList[i].date;
+            listNote[i].style.display = "flex";
+            listNote[i].setAttribute('data-index', indexesOfItems[i]);
+        } else {
+            listNote[i].style.display = "none";
+            listNote[i].removeAttribute('data-index');
+        }
+    }
 
     addBtnEvents();
     addNavButtons();
 
     let navBtns = document.getElementsByClassName('navButton');
     for (let i = 0; i < navBtns.length; i++) {
-        navBtns[i].classList.remove('navSelectedButton');
+        navBtns[i].removeAttribute('id');
     }
-    navBtns[0].classList.add('navSelectedButton');
+    navBtns[0].setAttribute('id', 'navSelectedButton');
 }
 
 function showList(navigatorList) {
-    let str = '';
-    // console.log(navigatorList);
-    let navBtns = document.getElementsByClassName('navButton');
-    let navigatorListReverse = navBtns.length - parseInt(event.target.getAttribute('data-index'))+ 1;
+    let pageOfList = [];
+    let indexesOfItems = [];
 
+    let navBtns = document.getElementsByClassName('navButton');
+    let navigatorListReverse = navBtns.length - navigatorList + 1;
+
+    // console.log(navigatorList);
+    // console.log(parseInt(event.target.getAttribute('data-index')));
+    // console.log(navigatorListReverse);
 
     if(todos.length % maxItemsInList && navigatorList === 1) {
         for(let index = todos.length - 1 - maxItemsInList*(navBtns.length - 1); index >= 0; index--) {
-            str += `<div class='list-note' data-index='${index}'>
-                        <div class="itemText">${todos[index].showText()}</div>
-                        <div class="btn-container">
-                            <div class="itemDate">${todos[index].date}</div>
-                            <div class="button editBtn">Edit</div>
-                            <div class="button deleteBtn">Delete</div>
-                        </div>
-                    </div>`;
+            pageOfList.push(todos[index]);
+            indexesOfItems.push(index);
         }
     } else {
         for(let index = todos.length - 1 - maxItemsInList*(navigatorListReverse-1); index >= todos.length - maxItemsInList*navigatorListReverse; index--) {
-            str += `<div class='list-note' data-index='${index}'>
-                        <div class="itemText">${todos[index].showText()}</div>
-                        <div class="btn-container">
-                            <div class="itemDate">${todos[index].date}</div>
-                            <div class="button editBtn">Edit</div>
-                            <div class="button deleteBtn">Delete</div>
-                        </div>
-                    </div>`;
+            pageOfList.push(todos[index]);
+            indexesOfItems.push(index);
         }
     }
 
-    document.getElementById('list').innerHTML = str;
+    for( let i = 0; i < maxItemsInList; i++) {
+        if(pageOfList[i]) {
+            text[i].innerHTML = pageOfList[i].showText();
+            itemDate[i].innerHTML = pageOfList[i].date;
+            listNote[i].style.display = "flex";
+            listNote[i].setAttribute('data-index', indexesOfItems[i]);
+        } else {
+            listNote[i].style.display = "none";
+            listNote[i].removeAttribute('data-index');
+        }
+    }
 
     addBtnEvents();
+}
+
+//переключение страниц по стрелочкам
+
+function showPrevPageOfList(){
+    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
+    let navBtns = document.getElementsByClassName('navButton');
+
+    if(index === navBtns.length) {
+        return;
+    }
+
+    let indexInBtnArray = navBtns.length - index;
+
+    navBtns[indexInBtnArray].removeAttribute('id');
+    navBtns[indexInBtnArray - 1].setAttribute('id', 'navSelectedButton');
+
+    showList(index + 1);
+}
+
+function showNextPageOfList(){
+    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
+    let navBtns = document.getElementsByClassName('navButton');
+
+    if(index === 1) {
+        return;
+    }
+
+    let indexInBtnArray = navBtns.length - index;
+
+    navBtns[indexInBtnArray].removeAttribute('id');
+    navBtns[indexInBtnArray + 1].setAttribute('id', 'navSelectedButton');
+
+    showList(index - 1);
 }
 
 // навешиваем события на динамически созданные кнопки - Edit и Delete
 function addBtnEvents() {
     let delBut = document.querySelectorAll('.deleteBtn');
     for(let i  = 0; i < delBut.length; i++){
+        delBut[i].style.display = 'block';
         delBut[i].addEventListener('click', deleteItem);
     }
 
-    let edBut = document.querySelectorAll('.editBtn');
+        let edBut = document.querySelectorAll('.editBtn');
     for(let i  = 0; i < edBut.length; i++){
+        edBut[i].style.display = 'block';
         edBut[i].addEventListener('click', editItem);
     }
 }
@@ -102,7 +155,8 @@ function addBtnEvents() {
 // добавили внизу навигатор по блокам в maxItemsInList элементов списка
 
 function addNavButtons() {
-    let navigator = document.getElementById('navigator');
+    document.getElementById('navigatorContainer').style.display = 'flex';
+    let navigator = document.getElementById('btnNavigator');
     navigator.innerHTML = '';
     let butCount = Math.ceil(todos.length/maxItemsInList);
 
@@ -137,10 +191,10 @@ function addNavBtnEvents() {
             let navBtns = document.getElementsByClassName('navButton');
             for (let i = 0; i < navBtns.length; i++) {
                 // console.log(navBtns[i]);
-                navBtns[i].classList.remove('navSelectedButton');
+                navBtns[i].removeAttribute('id');
             }
-            navBtns[i].classList.add('navSelectedButton');
-
+            navBtns[i].setAttribute('id', 'navSelectedButton');
+            // console.log(parseInt(event.target.getAttribute('data-index')));
             showList(parseInt(event.target.getAttribute('data-index')));
         });
     }
@@ -186,4 +240,53 @@ function saveItem() {
     showAllList();
 }
 
-export { showAllList, saveItem };
+function searchInList() {
+
+    let searchingItem = document.getElementById('searchLine').value;
+
+    const maxItemsInList = 3;
+
+    let text = document.getElementsByClassName('itemText');
+    let itemDate = document.getElementsByClassName('itemDate');
+    let listNote = document.getElementsByClassName('list-note');
+
+    if (!document.getElementById('searchLine').value) {
+        return;
+    }
+
+    let lastElem = searchingItem.length;
+    let searchArray = [];
+
+    todos.forEach((item) => {
+        if(item.showText().slice(0, lastElem) ===  searchingItem) {
+            searchArray.push(item);
+        }
+    });
+
+    for( let i = 0; i < maxItemsInList; i++) {
+        if(searchArray[i]) {
+            text[i].innerHTML = searchArray[i].showText();
+            itemDate[i].innerHTML = searchArray[i].date;
+            listNote[i].style.display = "flex";
+        } else {
+            listNote[i].style.display = "none";
+        }
+    }
+
+    let delBut = document.querySelectorAll('.deleteBtn');
+    let edBut = document.querySelectorAll('.editBtn');
+    for(let i  = 0; i < delBut.length; i++){
+        delBut[i].style.display = 'none';
+        edBut[i].style.display = 'none';
+    }
+    document.getElementById('navigatorContainer').style.display = 'none';
+
+    if (searchArray.length === 0) {
+        document.getElementById('searchLine').value = 'No matches';
+        return;
+    }
+
+
+}
+
+export { showAllList, saveItem, makeTemplateForItems, showPrevPageOfList, showNextPageOfList, addBtnEvents, searchInList};

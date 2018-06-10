@@ -23,8 +23,6 @@ function sortList(sortParam) {
         if (a[sortParametr] < b[sortParametr]) {
             return 1;
         }
-        // a должно быть равным b
-        return 0;
     });
 
     toLocalStorage();
