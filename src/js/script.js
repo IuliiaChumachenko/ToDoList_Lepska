@@ -2,7 +2,15 @@
 
 import addItemToList from './TodoItemFunc';
 import {fromLocalStorage} from "./localStorage";
-import {showAllList, saveItem, makeTemplateForItems, showPrevPageOfList, showNextPageOfList, searchInList} from "./showList";
+import {
+    showAllList,
+    saveItem,
+    makeTemplateForItems,
+    showPrevPageOfList,
+    showNextPageOfList,
+    searchInList,
+    addBtnEvents
+} from "./showList";
 import {sortList} from "./sortList";
 
 export let todos = [];
@@ -10,6 +18,7 @@ export let form = document.forms.main;
 
 //формируем макет для отображения todo list'a
 makeTemplateForItems();
+addBtnEvents();
 
 // проверка local storage при загрузке страницы
 

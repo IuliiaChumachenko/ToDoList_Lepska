@@ -26,6 +26,46 @@ function makeTemplateForItems() {
                 </div>`;
     }
     document.getElementById('list2').innerHTML = str;
+
+}
+
+// Делегируем события с кнопок Edit и Delete
+function addBtnEvents() {
+
+    let listDelegatedEvents = document.getElementById('list2');
+
+    listDelegatedEvents.addEventListener('click', () => {
+
+        let target = event.target;
+
+        while (target.getAttribute('id') !== 'list2') {
+
+            if (target.classList.contains('deleteBtn')){
+
+                let index = event.target.parentNode.parentNode.getAttribute('data-index');
+
+                todos.splice(index, 1);
+
+                toLocalStorage();
+
+                showAllList();
+            }
+
+            if (target.classList.contains('editBtn')) {
+
+                document.getElementById('addBtn').style.display ='none';
+                document.getElementById('saveBtn').style.display ='block';
+
+                let index = event.target.parentNode.parentNode.getAttribute('data-index');
+
+                form.elements.newItem.value = todos[index].showText();
+                form.elements.index.value = index;
+            }
+            target = target.parentNode;
+
+        }
+    });
+
 }
 
 // функция отрисовки списка на экране - отрисовывает последние maxItemsInList элементов
@@ -50,6 +90,7 @@ function showAllList() {
             text[i].innerHTML = pageOfList[i].showText();
             itemDate[i].innerHTML = pageOfList[i].date;
             listNote[i].style.display = "flex";
+            listNote[i].removeAttribute('data-index');
             listNote[i].setAttribute('data-index', indexesOfItems[i]);
         } else {
             listNote[i].style.display = "none";
@@ -57,7 +98,16 @@ function showAllList() {
         }
     }
 
-    addBtnEvents();
+    let delBut = document.querySelectorAll('.deleteBtn');
+    for(let i  = 0; i < delBut.length; i++){
+        delBut[i].style.display = 'block';
+    }
+
+    let edBut = document.querySelectorAll('.editBtn');
+    for(let i  = 0; i < edBut.length; i++){
+        edBut[i].style.display = 'block';
+    }
+
     addNavButtons();
 
 
@@ -90,6 +140,7 @@ function showList(navigatorList) {
             text[i].innerHTML = pageOfList[i].showText();
             itemDate[i].innerHTML = pageOfList[i].date;
             listNote[i].style.display = "flex";
+            listNote[i].removeAttribute('data-index');
             listNote[i].setAttribute('data-index', indexesOfItems[i]);
         } else {
             listNote[i].style.display = "none";
@@ -97,45 +148,7 @@ function showList(navigatorList) {
         }
     }
 
-    addBtnEvents();
-}
-
-// навешиваем события на динамически созданные кнопки - Edit и Delete
-function addBtnEvents() {
-    let delBut = document.querySelectorAll('.deleteBtn');
-    for(let i  = 0; i < delBut.length; i++){
-        delBut[i].style.display = 'block';
-        delBut[i].addEventListener('click', deleteItem);
-    }
-
-        let edBut = document.querySelectorAll('.editBtn');
-    for(let i  = 0; i < edBut.length; i++){
-        edBut[i].style.display = 'block';
-        edBut[i].addEventListener('click', editItem);
-    }
-}
-
-
-// фукнция удаления элемента
-function deleteItem(event) {
-    let index = event.target.parentNode.parentNode.getAttribute('data-index');
-    todos.splice(index, 1);
-
-    toLocalStorage();
-
-    showAllList();
-
-}
-
-// функция, которая срабатывает на кнопе Edit
-function editItem(event) {
-    document.getElementById('addBtn').style.display ='none';
-    document.getElementById('saveBtn').style.display ='block';
-
-    let index = event.target.parentNode.parentNode.getAttribute('data-index');
-
-    form.elements.newItem.value = todos[index].showText();
-    form.elements.index.value = index;
+    // addBtnEvents();
 }
 
 // фунция сохранения изменений
@@ -210,7 +223,7 @@ function addNavButtons() {
     for (let i = butCount; i >= 1; i--) {
         let butElem = document.createElement('div');
         butElem.classList.add('navButton');
-        butElem.setAttribute('data-index', i);
+        butElem.setAttribute('data-navindex', i);
         butElem.innerHTML = i;
         navigator.appendChild(butElem);
     }
@@ -218,7 +231,7 @@ function addNavButtons() {
     if (!butCount){
         let butElem = document.createElement('div');
         butElem.classList.add('navButton');
-        butElem.setAttribute('data-index', 1);
+        butElem.setAttribute('data-navindex', 1);
         butElem.innerHTML = 1;
         navigator.appendChild(butElem);
     }
@@ -237,7 +250,7 @@ function addNavBtnEvents() {
                 navBtns[i].removeAttribute('id');
             }
             navBtns[i].setAttribute('id', 'navSelectedButton');
-            showList(parseInt(event.target.getAttribute('data-index')));
+            showList(parseInt(event.target.getAttribute('data-navindex')));
         });
     }
 }
@@ -245,7 +258,7 @@ function addNavBtnEvents() {
 //переключение страниц по стрелочкам
 
 function showPrevPageOfList(){
-    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
+    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-navindex'));
 
     if(index === navBtns.length) {
         return;
@@ -260,7 +273,7 @@ function showPrevPageOfList(){
 }
 
 function showNextPageOfList(){
-    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-index'));
+    let index = parseInt((document.getElementById('navSelectedButton')).getAttribute('data-navindex'));
 
     if(index === 1) {
         return;
